@@ -1,0 +1,10 @@
+# These aliases will only get loaded if we have a terminal that supports colour
+
+# only applicable if coloured directory output is enabled (see general.rc)
+alias ls='ls --color=auto'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'

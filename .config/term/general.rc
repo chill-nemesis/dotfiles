@@ -1,0 +1,65 @@
+
+# define/set default env variables
+
+export EDITOR="vim"
+export VISUAL="vim"
+
+
+
+terminal_has_colour=no
+
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) colour_prompt=yes;;
+esac
+
+
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    terminal_has_colour=yes
+fi
+
+
+
+# Load alias definitions
+if [ -f $TC_ROOT_DIR/aliases/generic.rc ]; then
+    DebugMessage "Loading aliases"
+    . $TC_ROOT_DIR/aliases/generic.rc
+fi
+
+if [[ "$terminal_has_colour" == yes ]]; then
+    if [[ -f $TC_ROOT_DIR/aliases/colour.rc ]]; then
+        DebugMessage "Loading colour-aliases"
+        . $TC_ROOT_DIR/aliases/colour.rc
+    fi
+fi
+
+
+# Although this is a git-based script (and is used to query repo state), we use it to modify our cli-prompt --> it belongs to general (and thus should be located in scripts)
+if ! [[ -f $TC_ROOT_DIR/scripts/git-prompt.sh ]]; then
+    DebugMessage "No git-prompt found, downloading..."
+    if ! [[ -d $TC_ROOT_DIR/scripts ]]; then
+        mkdir $TC_ROOT_DIR/scripts
+    fi
+
+    wget --no-verbose --directory-prefix=$TC_ROOT_DIR/scripts/ https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+fi
+
+. $TC_ROOT_DIR/scripts/git-prompt.sh
+GIT_PS1_SHOWDIRTYSTATE=1
+PROMPT_COMMAND='__git_ps1 "\[\033[38;5;166m\]\u@\h\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\033[38;5;22m\]\w\[$(tput sgr0)\]" "\\\$ "'
+
+
+# set the default command prompt output format: user@hostname:dir(branch)$ 
+# branch is only visible if the current directory is a repository
+# this also has colouring!
+# INFO: there is/was also the option to use git-prompt.sh (a contributed script from the git main repository).
+# export PS1="\[\033[38;5;166m\]\u@\h\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\033[38;5;28m\]\w\[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;169m\]\$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')\[$(tput sgr0)\]\\$ \[$(tput sgr0)\]"
+
+
+
+
+unset terminal_has_colour colour_prompt force_colour_prompt colour_dirs

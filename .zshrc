@@ -1,0 +1,1 @@
+. ~/.config/term/root.rc

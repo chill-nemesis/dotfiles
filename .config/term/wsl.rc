@@ -1,0 +1,13 @@
+# TODO: only load this if we are running in a WSL environment
+
+# check if the ssh-agent is started. WSL has trouble doing that manually, so starting with bash is a workaround
+if [ -z ${SSH_AGENT_PID+x} ]; then
+    # ssh-agent is not running, start it
+    # this also pipes the output (i.e. the agent pid to dev/null instead of printing it as a message in bash)
+    eval $(ssh-agent -s) > /dev/null
+fi
+
+# Enable display forwarding for wsl to vcXsrv (only once)
+if [ -z ${DISPLAY+x} ]; then
+    export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+fi
