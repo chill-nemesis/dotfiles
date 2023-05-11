@@ -1,5 +1,7 @@
 [core]
 	editor = vim
+    # Uncomment the following command to enable debugging git clone
+    # sshCommand = ssh -vvv
 [alias]
 	graph = log --graph --all --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
 [diff]
