@@ -2,7 +2,7 @@
 
 # Helper functions. Make sure to remove them at the end of the file!
 # uncommenting the following flag will enable debug output
-TC_ENABLE_DEBUG_FLAG="true"
+# TC_ENABLE_DEBUG_FLAG="true"
 DebugMessage () 
 {
     if [[ "${TC_ENABLE_DEBUG_FLAG}" == "true" ]]; then
