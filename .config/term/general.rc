@@ -50,7 +50,7 @@ fi
 
 . $TC_ROOT_DIR/scripts/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
-PROMPT_COMMAND='__git_ps1 "\[\033[38;5;166m\]\u@\h\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\033[38;5;22m\]\w\[$(tput sgr0)\]" "\\\$ "'
+PROMPT_COMMAND='__git_ps1 "\[\033[94m\]$VIRTUAL_ENV_PROMPT\[\033[38;5;166m\]\u@\h\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\033[38;5;22m\]\w\[$(tput sgr0)\]" "\\\$ "'
 
 
 # set the default command prompt output format: user@hostname:dir(branch)$ 
