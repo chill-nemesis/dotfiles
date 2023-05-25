@@ -1,1 +1,1 @@
-. ~/.config/term/root.rc
+. ~/.dotfiles/.config/term/root.rc
