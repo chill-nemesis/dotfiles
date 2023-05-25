@@ -15,3 +15,24 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
 fi
+
+# add ble.sh
+# https://github.com/akinomyoga/ble.sh
+TC_BLE_SOURCE_DIR=$TC_MODULES_DIR/ble
+TC_BLE_SCRIPT=$TC_BLE_SOURCE_DIR/out/ble.sh
+if [[ ! -f $TC_BLE_SCRIPT ]]; then
+    DebugMessage "ble.sh not found!"
+    if [[ ! -d $TC_BLE_SOURCE_DIR ]]; then
+        DebugMessage "Could not find ble submodule. Running git submodule update --init --recursive."
+        git submodule update --init --recursive
+    fi
+
+    DebugMessage "Building ble.sh"
+    make -C $TC_BLE_SOURCE_DIR install
+fi
+
+DebugMessage "Sourcing ble.sh"
+source $TC_BLE_SCRIPT
+
+unset TC_BLE_SOURCE_DIR TC_BLE_SCRIPT
+

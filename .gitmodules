@@ -1,0 +1,4 @@
+[submodule "ble"]
+	path = modules/ble
+	url = https://github.com/akinomyoga/ble.sh.git
+	shallow = true
