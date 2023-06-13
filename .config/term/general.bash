@@ -22,7 +22,9 @@ TC_BLE_SOURCE_DIR=$TC_MODULES_DIR/ble
 TC_BLE_SCRIPT=$TC_BLE_SOURCE_DIR/out/ble.sh
 if [[ ! -f $TC_BLE_SCRIPT ]]; then
     DebugMessage "ble.sh not found!"
-    if [[ ! -d $TC_BLE_SOURCE_DIR ]]; then
+    # Check if the submodule is initialized
+    # We can do that by checking if the status of the submodule begins with a dash --> Not initialized
+    if [[ $(git submodule status $TC_BLE_SOURCE_DIR) == -* ]]; then
         DebugMessage "Could not find ble submodule. Running git submodule update --init --recursive."
         git submodule update --init --recursive
     fi
