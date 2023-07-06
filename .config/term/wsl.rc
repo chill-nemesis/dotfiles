@@ -11,3 +11,6 @@ fi
 if [ -z ${DISPLAY+x} ]; then
     export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 fi
+
+# Ensure that we start in user-home. This is usually an issue if we start a wsl instance from terminal
+cd ~
