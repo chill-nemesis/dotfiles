@@ -1,4 +1,12 @@
-# TODO: only load this if we are running in a WSL environment
+# Check if we are running on WSL. This is by no means a fool-proof method, but it is the best we got
+# See here: https://superuser.com/questions/1749781/how-can-i-check-if-the-environment-is-wsl-from-a-shell-script
+
+if ! [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+    DebugMessage "Not a WSL terminal - skipping wsl config!"
+    return
+fi
+
+DebugMessage "Detected WSL terminal - loading wsl config!"
 
 # check if the ssh-agent is started. WSL has trouble doing that manually, so starting with bash is a workaround
 if [ -z ${SSH_AGENT_PID+x} ]; then
@@ -11,3 +19,6 @@ fi
 if [ -z ${DISPLAY+x} ]; then
     export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 fi
+
+# Ensure that we start in user-home. This is usually an issue if we start a wsl instance from terminal
+cd ~
