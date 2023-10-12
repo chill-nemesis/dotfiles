@@ -1,0 +1,60 @@
+current_date_time=$(date +%s)
+last_check_time=$(cat $TC_CACHE_DIR/.last_version_check)
+diff_seconds=$((current_date_time - last_check_time))
+
+
+# only perform checks and updates if we have at least waited for 1 day (86400s) since the last check
+if [ $diff_seconds -lt 86400 ]; then
+	unset diff_seconds current_date_time last_check_time
+	return
+fi
+
+echo $current_date_time > $TC_CACHE_DIR/.last_version_check
+unset diff_seconds last_check_time current_date_time
+
+
+# fetch remote quietly
+# We wrap this in a command expression to not actually modifiy the current working dir!
+$(cd $TC_ROOT_DIR && git fetch --quiet)
+
+# check version of main branch (even if we are on another branch)
+local_main_hash=$(cd $TC_ROOT_DIR && git rev-parse main)
+remote_main_hash=$(cd $TC_ROOT_DIR && git rev-parse origin/main)
+
+if [ "${local_main_hash}" == "${remote_main_hash}" ]; then
+	DebugMessage ".dotFiles is running on the latest version"
+	unset local_main_hash remote_main_hash
+	return
+fi
+unset local_main_hash remote_main_hash
+
+
+# check if we are running on main branch
+branch_name=$(cd $TC_ROOT_DIR && git symbolic-ref -q --short HEAD)
+
+# first, check if we are on the main branch
+if [ "${branch_name}" != "main" ]; then
+	Warn "There is an update available, but .dotfile is not running on \"main\"!"
+	unset branch_name
+	return
+fi
+unset branch_name
+
+# We are not on the latest version
+# Ask if we should update
+while true; do
+	read -p "Do you want to update to the latest version? [Y/n] " yn
+
+	case $yn in
+		[Yy]* ) break;; # everything after this loop will deal with updating
+		[Nn]* ) unset yn && return;; # dont execute any further
+		"" ) break;; # use default answer, that is yes!
+		* ) ;; # we could not parse the input, try again
+	esac
+done
+unset yn
+
+# TODO: what if we are dirty?
+
+$(cd $TC_ROOT_DIR && git checkout main)
+$(cd $TC_ROOT_DIR && git pull --ff-only)

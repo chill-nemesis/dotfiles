@@ -1,5 +1,5 @@
 DF_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.install
+DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
 
 # A list of files that need to be moved for install
 DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig"
