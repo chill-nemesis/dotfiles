@@ -9,6 +9,13 @@ DebugMessage ()
         echo "$@"
     fi
 }
+
+Warn ()
+{
+    # make the output red, and then reset colouring
+    echo -e "\033[0;31m$@\033[0m"
+}
+
 # Get the directory of this file
 TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -59,11 +66,10 @@ for FILE in $TC_ROOT_DIR/*; do
 done
 
 
-
 # TODO: load local configs for the current user that might override previously set global options --> Needs to be AFTER the global options have been loaded
 
 
 # undefine all functions/helper vars
 # It is a good practice to use inverse declartion order ;)
-# unset -f Debug
+unset -f DebugMessage Warn
 unset TC_ROOT_DIR TC_MODULES_DIR TC_SHELL TC_ENABLE_DEBUG_FLAG

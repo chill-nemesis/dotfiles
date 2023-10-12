@@ -1,0 +1,41 @@
+# check version of main branch (even if we are on another branch)
+local_main_hash=$(git rev-parse main)
+remote_main_hash=$(git rev-parse origin/main)
+
+if [ "${local_main_hash}" == "${remote_main_hash}" ]; then
+	DebugMessage ".dotFiles is running on the latest version"
+	unset local_main_hash remote_main_hash
+	return
+fi
+unset local_main_hash remote_main_hash
+
+
+# check if we are running on main branch
+branch_name=$(git symbolic-ref -q --short HEAD)
+
+# first, check if we are on the main branch
+if [ "${branch_name}" != "main" ]; then
+	Warn "There is an update available, but .dotfile is not running on \"main\"!"
+	unset branch_name
+	return
+fi
+unset branch_name
+
+# We are not on the latest version
+# Ask if we should update
+while true; do
+	read -p "Do you want to update to the latest version? [Y/n] " yn
+
+	case $yn in
+		[Yy]* ) break;; # everything after this loop will deal with updating
+		[Nn]* ) unset yn && return;; # dont execute any further
+		"" ) break;; # use default answer, that is yes!
+		* ) ;; # we could not parse the input, try again
+	esac
+done
+unset yn
+
+# TODO: what if we are dirty?
+
+git checkout main
+git pull --ff-only
