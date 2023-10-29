@@ -16,6 +16,24 @@ Warn ()
     echo -e "\033[0;31m$@\033[0m"
 }
 
+function detect_shell_type ()
+{
+    if [ -n "${BASH}" ]; then
+        echo bash
+    elif [ -n "${ZSH_VERSION}" ]; then
+        echo "zsh"
+    elif [ -n "${SHELL}" ]; then
+        case "$SHELL" in
+            *bash*) echo "bash" ;;
+            *zsh*) echo "zsh" ;;
+            *) Warn "Unknown shell type: ${SHELL}" ;;
+        esac
+    else
+        Warn Cannot determine shell type, using ps fallback!
+        echo $(ps -cp $$ -o command="")
+    fi
+}
+
 # Get the directory of this file
 TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -30,7 +48,7 @@ if [ ! -d "$TC_CACHE_DIR" ]; then
 fi
 
 # Get the shell that is running this config
-TC_SHELL=$( ps -cp $$ -o command="" )
+TC_SHELL=$(detect_shell_type)
 
 # This space is reserved for order-dependent loading
 
