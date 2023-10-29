@@ -38,6 +38,8 @@ if [[ ! -f $TC_BLE_SCRIPT ]]; then
         make -C $TC_BLE_SOURCE_DIR install
     else
         DebugMessage "No \"make\" in path! Cannot build ble.sh"
+        unset TC_BLE_SOURCE_DIR TC_BLE_SCRIPT
+        return
     fi
 fi
 
