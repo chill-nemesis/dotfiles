@@ -32,8 +32,13 @@ if [[ ! -f $TC_BLE_SCRIPT ]]; then
 
     unset TC_BLE_SUBMODULE_STATUS
 
-    DebugMessage "Building ble.sh"
-    make -C $TC_BLE_SOURCE_DIR install
+    if command -v make &> /dev/null
+    then
+        DebugMessage "Building ble.sh"
+        make -C $TC_BLE_SOURCE_DIR install
+    else
+        DebugMessage "No \"make\" in path! Cannot build ble.sh"
+    fi
 fi
 
 DebugMessage "Sourcing ble.sh"
