@@ -32,3 +32,6 @@ function is_windows ()
 		false
 	fi
 }
+
+# NOTE!
+# Make sure to unset the functions at the end of root.rc!

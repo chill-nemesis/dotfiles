@@ -97,4 +97,5 @@ done
 # undefine all functions/helper vars
 # It is a good practice to use inverse declartion order ;)
 unset -f DebugMessage Warn
+unset -f is_windows convert_path_to_windows
 unset TC_ROOT_DIR TC_MODULES_DIR TC_SHELL TC_ENABLE_DEBUG_FLAG

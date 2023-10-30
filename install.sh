@@ -1,15 +1,14 @@
-# load helper functions
-source term/helpers.rc
-
-
 DF_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
+
+# load helper functions
+source ${DF_ROOT_DIR}/.config/term/helpers.rc
 
 # A list of files that need to be moved for install
 DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig"
 
 
-if is_windows; then
+if [ is_windows ]; then
 	echo "To install, you need to run the shell as an administrator!"
 	while true; do
 		read -p "Do you want to continue? [Y/n] " yn
