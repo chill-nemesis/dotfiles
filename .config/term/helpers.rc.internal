@@ -1,3 +1,34 @@
+DebugMessage () 
+{
+    if [[ "${TC_ENABLE_DEBUG_FLAG}" == "true" ]]; then
+        echo "$@"
+    fi
+}
+
+Warn ()
+{
+    # make the output red, and then reset colouring
+    echo -e "\033[0;31m$@\033[0m"
+}
+
+function detect_shell_type ()
+{
+    if [ -n "${BASH}" ]; then
+        echo bash
+    elif [ -n "${ZSH_VERSION}" ]; then
+        echo "zsh"
+    elif [ -n "${SHELL}" ]; then
+        case "$SHELL" in
+            *bash*) echo "bash" ;;
+            *zsh*) echo "zsh" ;;
+            *) Warn "Unknown shell type: ${SHELL}" ;;
+        esac
+    else
+        Warn Cannot determine shell type, using ps fallback!
+        echo $(ps -cp $$ -o command="")
+    fi
+}
+
 function convert_path_to_windows ()
 {
 	local path=$1
@@ -15,18 +46,23 @@ function convert_path_to_windows ()
 
 function is_windows ()
 {
+	DebugMessage "Checking for windows"
+
 	# check if we are running on a windows machine
 	# https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
 	system_name="$(uname -s)"
 	sys_windows=0
-	case "${unameOut}" in
+	case "${system_name}" in
 		CYGWIN*)    sys_windows=1;;
 		MINGW*)     sys_windows=1;;
 		MSYS_NT*)   sys_windows=1;;
 		*)          ;; # e.g. linux, darwin, or any other system -> Assume we work as linux
 	esac
 
+	DebugMessage "System name is ${system_name}, resulting in ${sys_windows}"
+
 	if [ ${sys_windows} -eq 1 ]; then
+		DebugMessage "Found windows!"
 		true
 	else 
 		false

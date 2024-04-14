@@ -1,41 +1,12 @@
 # This is the root file for loading all other specific bashrc configs
 
-# Helper functions. Make sure to remove them at the end of the file!
-# uncommenting the following flag will enable debug output
-# TC_ENABLE_DEBUG_FLAG="true"
-DebugMessage () 
-{
-    if [[ "${TC_ENABLE_DEBUG_FLAG}" == "true" ]]; then
-        echo "$@"
-    fi
-}
-
-Warn ()
-{
-    # make the output red, and then reset colouring
-    echo -e "\033[0;31m$@\033[0m"
-}
-
-function detect_shell_type ()
-{
-    if [ -n "${BASH}" ]; then
-        echo bash
-    elif [ -n "${ZSH_VERSION}" ]; then
-        echo "zsh"
-    elif [ -n "${SHELL}" ]; then
-        case "$SHELL" in
-            *bash*) echo "bash" ;;
-            *zsh*) echo "zsh" ;;
-            *) Warn "Unknown shell type: ${SHELL}" ;;
-        esac
-    else
-        Warn Cannot determine shell type, using ps fallback!
-        echo $(ps -cp $$ -o command="")
-    fi
-}
-
 # Get the directory of this file
 TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Helper functions. Make sure to remove them at the end of the file!
+# uncommenting the following flag will enable debug output
+TC_ENABLE_DEBUG_FLAG="true"
+source $TC_ROOT_DIR/helpers.rc.internal
 
 # Set the modules dir
 TC_MODULES_DIR=$TC_ROOT_DIR/../../modules
