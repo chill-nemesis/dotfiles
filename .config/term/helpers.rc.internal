@@ -46,8 +46,6 @@ function convert_path_to_windows ()
 
 function is_windows ()
 {
-	DebugMessage "Checking for windows"
-
 	# check if we are running on a windows machine
 	# https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
 	system_name="$(uname -s)"
@@ -59,10 +57,7 @@ function is_windows ()
 		*)          ;; # e.g. linux, darwin, or any other system -> Assume we work as linux
 	esac
 
-	DebugMessage "System name is ${system_name}, resulting in ${sys_windows}"
-
 	if [ ${sys_windows} -eq 1 ]; then
-		DebugMessage "Found windows!"
 		true
 	else 
 		false
