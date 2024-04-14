@@ -4,6 +4,25 @@
 export EDITOR="vim"
 export VISUAL="vim"
 
+if is_windows; then
+    DebugMessage "Adding additional necessary environment variables"
+    # set the USER env variable
+    # Ble.sh really wants this to exist, so we just "forward" the USERNAME env variable of windows
+    # TODO: What if we switch users during execution? Is that even possible on windows? (I.e. "su"-like behaviour)
+	export USER=$USERNAME
+
+    # ble.sh wants/needs this on MSYS
+    # This one is a bit trickier: The system language.
+    # For now, we just hardcode it to english
+    # See the following links for more information:
+    # https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html
+    # https://stackoverflow.com/questions/1610337/how-can-i-find-the-current-windows-language-from-cmd
+    # TODO: get the system language dynamically
+    export LANGUAGE=en_US.UTF-8
+    export LANG=$LANGUAGE
+fi
+
+
 
 
 terminal_has_colour=no

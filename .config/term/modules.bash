@@ -26,6 +26,10 @@ if [[ ! -f $TC_BLE_SCRIPT ]]; then
 fi
 
 DebugMessage "Sourcing ble.sh"
+if is_windows; then
+    Warn "Ble cannot bind some functionality - expect some errors on windows!"
+fi
+
 source $TC_BLE_SCRIPT
 
 unset TC_BLE_SOURCE_DIR TC_BLE_SCRIPT
