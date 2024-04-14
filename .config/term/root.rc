@@ -8,6 +8,8 @@ TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # TC_ENABLE_DEBUG_FLAG="true"
 source $TC_ROOT_DIR/helpers.rc.internal
 
+# TODO: check for update? If so, we might have to restart dotfiles!
+
 # Set the modules dir
 TC_MODULES_DIR=$TC_ROOT_DIR/../../modules
 
