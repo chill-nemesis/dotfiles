@@ -1,5 +1,5 @@
 current_date_time=$(date +%s)
-last_check_time=$(cat $TC_CACHE_DIR/.last_version_check)
+last_check_time=$(cat $TC_CACHE_DIR/.last_version_check 2>/dev/null)
 diff_seconds=$((current_date_time - last_check_time))
 
 
@@ -30,7 +30,7 @@ unset local_main_hash remote_main_hash
 
 
 # check if we are running on main branch
-branch_name=$(cd $TC_ROOT_DIR && git symbolic-ref -q --short HEAD)
+branch_name=$(cd $TC_ROOT_DIR && git symbolic-ref --quiet --short HEAD)
 
 # first, check if we are on the main branch
 if [ "${branch_name}" != "main" ]; then
@@ -43,6 +43,7 @@ unset branch_name
 # We are not on the latest version
 # Ask if we should update
 while true; do
+	echo "There is a new version available."
 	read -p "Do you want to update to the latest version? [Y/n] " yn
 
 	case $yn in
@@ -54,7 +55,5 @@ while true; do
 done
 unset yn
 
-# TODO: what if we are dirty?
-
-$(cd $TC_ROOT_DIR && git checkout main)
-$(cd $TC_ROOT_DIR && git pull --ff-only)
+$(cd $TC_ROOT_DIR && git checkout --quiet main)
+$(cd $TC_ROOT_DIR && git pull --quiet --ff-only)
