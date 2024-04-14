@@ -1,8 +1,27 @@
 DF_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
 
+# load helper functions
+source ${DF_ROOT_DIR}/.config/term/helpers.rc
+
 # A list of files that need to be moved for install
 DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig"
+
+
+if [ is_windows ]; then
+	echo "To install, you need to run the shell as an administrator!"
+	while true; do
+		read -p "Do you want to continue? [Y/n] " yn
+
+		case $yn in
+			[Yy]* ) break;; # everything after this loop will perform the install
+			[Nn]* ) unset yn && exit;; # dont execute any further
+			"" ) break;; # use default answer, that is yes!
+			* ) ;; # we could not parse the input, try again
+		esac
+	done
+	unset yn
+fi
 
 #
 # -----------
@@ -22,18 +41,25 @@ touch $DF_INSTALL_CACHE_DIR/.installed
 
 # Move old term/config files to cache
 for file in $DF_FILES_TO_MOVE; do
-	# echo "mv ~/$file $DF_INSTALL_CACHE_DIR/$file"
-	# echo "ln -s $DF_ROOT_DIR/$file ~/$file"
+	target=$DF_ROOT_DIR/$file
+	link=~/$file
+
 	mv ~/$file $DF_INSTALL_CACHE_DIR/$file 2>/dev/null
-	ln -s $DF_ROOT_DIR/$file ~/$file
+
+	if [ is_windows ]; then
+		target=$(convert_path_to_windows ${target})
+		link=$(convert_path_to_windows ${link})
+
+		cmd <<< "mklink \"${link}\" \"${target}\"" > /dev/null
+	else
+		ln -s ${target} ${link}
+	fi
 done
 
 
 echo "Almost done. Restarting shell to finish installation..."
 
 exec "$SHELL"
-
-unset DF_ROOT_DIR DF_INSTALL_CACHE_DIR DF_FILES_TO_MOVE
 
 
 

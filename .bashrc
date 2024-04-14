@@ -33,5 +33,5 @@ shopt -s checkwinsize
 
 # load the root bashrc. This takes care of loading all other available scripts and configs
 if [ -f ~/.dotfiles/.config/term/root.rc ]; then
-    . ~/.dotfiles/.config/term/root.rc
+    source ~/.dotfiles/.config/term/root.rc
 fi
