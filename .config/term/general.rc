@@ -48,7 +48,7 @@ if ! [[ -f $TC_ROOT_DIR/scripts/git-prompt.sh ]]; then
     wget --no-verbose --directory-prefix=$TC_ROOT_DIR/scripts/ https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 fi
 
-. $TC_ROOT_DIR/scripts/git-prompt.sh
+source $TC_ROOT_DIR/scripts/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 PROMPT_COMMAND='__git_ps1 "\[\033[94m\]$VIRTUAL_ENV_PROMPT\[\033[38;5;166m\]\u@\h\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\033[38;5;22m\]\w\[$(tput sgr0)\]" "\\\$ "'
 
