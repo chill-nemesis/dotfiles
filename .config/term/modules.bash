@@ -1,8 +1,3 @@
-# only add modules if we are not! on windows
-if is_windows; then
-	return
-fi
-
 # add ble.sh
 # https://github.com/akinomyoga/ble.sh
 TC_BLE_SOURCE_DIR=$TC_MODULES_DIR/ble
