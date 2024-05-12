@@ -32,6 +32,7 @@ fi
 
 source $TC_BLE_SCRIPT
 DebugMessage "Sourcing ble extensions"
-source $TC_MODULES_DIR/ble-ext/ble-sabbrev-commit.rc
+
+source_files $TC_MODULES_DIR/ble-ext/
 
 unset TC_BLE_SOURCE_DIR TC_BLE_SCRIPT
