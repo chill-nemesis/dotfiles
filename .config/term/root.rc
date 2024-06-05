@@ -6,7 +6,7 @@ TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # Helper functions. Make sure to remove them at the end of the file!
 # uncommenting the following flag will enable debug output
 # TC_ENABLE_DEBUG_FLAG="true"
-source $TC_ROOT_DIR/helpers.rc.internal
+. $TC_ROOT_DIR/helpers.rc.internal
 
 # TODO: check for update? If so, we might have to restart dotfiles!
 

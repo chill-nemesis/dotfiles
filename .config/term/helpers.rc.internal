@@ -75,7 +75,7 @@ function source_files ()
 		fi
 		
 		DebugMessage "Sourcing file: " $FILE
-		source $FILE
+		. $FILE
 	done
 }
 

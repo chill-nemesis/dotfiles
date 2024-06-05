@@ -30,7 +30,7 @@ if is_windows; then
     Warn "Ble cannot bind some functionality - expect some errors on windows!"
 fi
 
-source $TC_BLE_SCRIPT
+. $TC_BLE_SCRIPT
 DebugMessage "Sourcing ble extensions"
 
 source_files $TC_MODULES_DIR/ble-ext/
