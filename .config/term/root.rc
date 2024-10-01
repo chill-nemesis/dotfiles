@@ -8,8 +8,6 @@ TC_ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # TC_ENABLE_DEBUG_FLAG="true"
 . $TC_ROOT_DIR/helpers.rc.internal
 
-# TODO: check for update? If so, we might have to restart dotfiles!
-
 # Set the modules dir
 TC_MODULES_DIR=$TC_ROOT_DIR/../../modules
 
@@ -22,6 +20,10 @@ fi
 
 # Get the shell that is running this config
 TC_SHELL=$(detect_shell_type)
+
+# next, check for updates
+# If this finds an update, the whole session will be restarted!
+. $TC_ROOT_DIR/update.rc.internal
 
 # This space is reserved for order-dependent loading
 
