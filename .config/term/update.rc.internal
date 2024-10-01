@@ -84,3 +84,8 @@ unset yn
 
 $(cd $TC_ROOT_DIR && git checkout --quiet main)
 $(cd $TC_ROOT_DIR && git pull --quiet --ff-only)
+
+
+# Restart the shell environment
+# Since we only do this at the start of the terminal, this should not be too drastic
+exec "$SHELL"
