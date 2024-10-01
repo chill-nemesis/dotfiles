@@ -9,13 +9,40 @@ if [ $diff_seconds -lt 86400 ]; then
 	return
 fi
 
-echo $current_date_time > $TC_CACHE_DIR/.last_version_check
-unset diff_seconds last_check_time current_date_time
+# Check if we can reach the repo
+# Get the remote origin URL
+remote_url=$(cd $TC_ROOT_DIR && git config --get remote.origin.url)
 
+if [ -z "$remote_url" ]; then
+	echo "No remote repository found."
+	unset diff_seconds current_date_time last_check_time remote_url
+	return 1
+fi
+
+# Extract the domain from the remote URL (supports both HTTPS and SSH URLs)
+if [[ "$remote_url" =~ ^http ]]; then
+	domain=$(echo "$remote_url" | awk -F/ '{print $3}')
+else
+	domain=$(echo "$remote_url" | awk -F@ '{print $2}' | awk -F: '{print $1}')
+fi
+
+# Ping the domain to check internet connectivity
+if ping -c 1 "$domain" &> /dev/null
+then
+	DebugMessage "Internet connection is available to $domain."
+else
+	DebugMessage "No internet connection to $domain - aborting update check."
+	unset diff_seconds current_date_time last_check_time remote_url domain
+	return
+fi
 
 # fetch remote quietly
 # We wrap this in a command expression to not actually modifiy the current working dir!
 $(cd $TC_ROOT_DIR && git fetch --quiet)
+
+# We now have fetched the newest version - now we can mark our version check
+echo $current_date_time > $TC_CACHE_DIR/.last_version_check
+unset diff_seconds last_check_time current_date_time
 
 # check version of main branch (even if we are on another branch)
 local_main_hash=$(cd $TC_ROOT_DIR && git rev-parse main)
