@@ -64,5 +64,20 @@ function is_windows ()
 	fi
 }
 
+function source_files ()
+{
+	local ROOT_DIR=$1
+
+	for FILE in $ROOT_DIR/*; do
+    	# Skip directories. Subdirs are supposed to enable grouping if included scripts need additional data.
+		if [[ -d $FILE ]]; then
+			continue;
+		fi
+		
+		DebugMessage "Sourcing file: " $FILE
+		. $FILE
+	done
+}
+
 # NOTE!
 # Make sure to unset the functions at the end of root.rc!
