@@ -6,8 +6,8 @@ DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
 # load helper functions
 . ${DF_ROOT_DIR}/.config/term/helpers.rc.internal
 
-# A list of files that need to be moved for install
-DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig"
+# A list of files and directories that need to be moved for install
+DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig .vim"
 
 
 if is_windows; then
@@ -46,6 +46,7 @@ for file in $DF_FILES_TO_MOVE; do
 	target=$DF_ROOT_DIR/$file
 	link=~/$file
 
+	# This should work regardless if it is a file or a directory
 	mv ~/$file $DF_INSTALL_CACHE_DIR/$file 2>/dev/null
 
 	if is_windows; then
