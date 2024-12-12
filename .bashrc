@@ -36,10 +36,9 @@ if [ -f ~/.dotfiles/.config/term/root.rc ]; then
     . ~/.dotfiles/.config/term/root.rc
 fi
 
-# If tmux is available, and if not in a tmux env, start tmux
+# if not in a tmux env, start tmux
 # Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+if [ -z "$TMUX" ]; then
     # Try to attach to a tmux session, if it fails, start a new one
-    # Also exit the shell afterwards
-    tmux attach || tmux new && exit
+    tmux attach || tmux new
 fi
