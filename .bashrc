@@ -35,3 +35,10 @@ shopt -s checkwinsize
 if [ -f ~/.dotfiles/.config/term/root.rc ]; then
     . ~/.dotfiles/.config/term/root.rc
 fi
+
+# if not in a tmux env, start tmux
+# Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
+if [ -z "$TMUX" ]; then
+    # Try to attach to a tmux session, if it fails, start a new one
+    tmux attach || tmux new
+fi
