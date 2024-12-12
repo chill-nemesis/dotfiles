@@ -40,5 +40,6 @@ fi
 # Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
 if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
     # Try to attach to a tmux session, if it fails, start a new one
-    tmux attach || tmux new
+    # Also exit the shell afterwards
+    tmux attach || tmux new && exit
 fi
