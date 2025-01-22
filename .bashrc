@@ -39,7 +39,37 @@ fi
 # If tmux is available, and if not in a tmux env, start tmux
 # Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
 if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-    # Try to attach to a tmux session, if it fails, start a new one
-    # Also exit the shell afterwards
-    tmux attach || tmux new && exit
+    # Capture the startup banner in a temporary file
+    # Using a tempfile rather than storing it in a variable handles edge cases
+    # (e.g., weirdly formatted text, or large text) better.
+    # STARTUP_MESSAGE=$(mktemp)
+
+    # # Check if there's input (e.g., a banner) to capture
+    # if [ -t 0 ]; then
+    #     # No input available, remove tempfile
+    #     rm -f "$STARTUP_MESSAGE"
+    # else
+    #     # Capture the input into the tempfile
+    #     cat > "$STARTUP_MESSAGE"
+    # fi
+    
+    # # Default is to start a new tmux session
+    # RC_TMUX_OPERATION="new"
+
+    # # Check if the DOTFILE_TMUX_ATTACH variable is set
+    # if [ -n "$DOTFILE_TMUX_ATTACH" ]; then
+    #     # attach to the session provided by the user
+    #     RC_TMUX_OPERATION="attach -t $DOTFILE_TMUX_ATTACH"
+    # fi
+
+
+    # # Start tmux and display the startup message if present
+
+    # tmux $RC_TMUX_OPERATION 'echo "Hi :)"'
+
+    # # Exit the initial shell after tmux finishes
+    # # exit
+
+
+    tmux new && exit
 fi
