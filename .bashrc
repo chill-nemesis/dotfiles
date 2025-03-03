@@ -4,8 +4,8 @@
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+*i*) ;;
+*) return ;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -30,7 +30,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-
 # load the root bashrc. This takes care of loading all other available scripts and configs
 if [ -f ~/.dotfiles/.config/term/root.rc ]; then
     . ~/.dotfiles/.config/term/root.rc
@@ -38,38 +37,26 @@ fi
 
 # If tmux is available, and if not in a tmux env, start tmux
 # Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-    # Capture the startup banner in a temporary file
-    # Using a tempfile rather than storing it in a variable handles edge cases
-    # (e.g., weirdly formatted text, or large text) better.
-    # STARTUP_MESSAGE=$(mktemp)
+if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+    # If we're not attached to a terminal on stdin,
+    # then there's something being piped in (like a banner)
+    BANNER_FILE="$(mktemp)"
 
-    # # Check if there's input (e.g., a banner) to capture
-    # if [ -t 0 ]; then
-    #     # No input available, remove tempfile
-    #     rm -f "$STARTUP_MESSAGE"
-    # else
-    #     # Capture the input into the tempfile
-    #     cat > "$STARTUP_MESSAGE"
-    # fi
-    
-    # # Default is to start a new tmux session
-    # RC_TMUX_OPERATION="new"
+    # Check if it is a login shell
+    # If so, we should print that in the banner
+    if shopt -q login_shell; then
+        run-parts /etc/update-motd.d >>"$BANNER_FILE"
+    fi
 
-    # # Check if the DOTFILE_TMUX_ATTACH variable is set
-    # if [ -n "$DOTFILE_TMUX_ATTACH" ]; then
-    #     # attach to the session provided by the user
-    #     RC_TMUX_OPERATION="attach -t $DOTFILE_TMUX_ATTACH"
-    # fi
+    if ! [ -t 0 ]; then
+        # Append any additional banner that may be there
+        cat >>"$BANNER_FILE"
+    fi
 
+    # Start tmux with the banner, and remove the banner file afterwards
+    tmux new bash -c "cat \"$BANNER_FILE\"; rm -f \"$BANNER_FILE\"; exec bash"
 
-    # # Start tmux and display the startup message if present
-
-    # tmux $RC_TMUX_OPERATION 'echo "Hi :)"'
-
-    # # Exit the initial shell after tmux finishes
-    # # exit
-
-
-    tmux new && exit
+    # Exit the original shell so we only keep the tmux session
+    # TODO: keep alive flag?
+    exit
 fi
