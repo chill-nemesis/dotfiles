@@ -30,13 +30,8 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# load the root bashrc. This takes care of loading all other available scripts and configs
-if [ -f ~/.dotfiles/.config/term/root.rc ]; then
-    . ~/.dotfiles/.config/term/root.rc
-fi
-
 # If tmux is available, and if not in a tmux env, start tmux
-# Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
+# This is run before the dotfiles hook to prevent running the startup scripts twice
 if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
     # If we're not attached to a terminal on stdin,
     # then there's something being piped in (like a banner)
@@ -59,4 +54,9 @@ if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
     # Exit the original shell so we only keep the tmux session
     # TODO: keep alive flag?
     exit
+fi
+
+# load the root bashrc. This takes care of loading all other available scripts and configs
+if [ -f ~/.dotfiles/.config/term/root.rc ]; then
+    . ~/.dotfiles/.config/term/root.rc
 fi
