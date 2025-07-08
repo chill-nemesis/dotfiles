@@ -14,8 +14,7 @@ if [[ ! -f $TC_BLE_SCRIPT ]]; then
 
     unset TC_BLE_SUBMODULE_STATUS
 
-    if command -v make &> /dev/null
-    then
+    if command -v make &>/dev/null; then
         DebugMessage "Building ble.sh"
         make -C $TC_BLE_SOURCE_DIR install
     else
@@ -30,7 +29,21 @@ if is_windows; then
     Warn "Ble cannot bind some functionality - expect some errors on windows!"
 fi
 
+# Update ble.sh
+# We use our update function to check if we should perform the update
+# The first parameter is the identifier for the update, the second is the time in seconds that should be waited before the next update attempt/check
+if should_perform_update ble 86400; then
+    DebugMessage "Updating ble.sh"
+
+    # Make sure this is silent
+    bash $TC_BLE_SCRIPT --update >/dev/null 2>&1
+    if [[ $? -ne 0 ]]; then
+        Warn "Failed to update ble.sh"
+    fi
+fi
+
 . $TC_BLE_SCRIPT
+
 DebugMessage "Sourcing ble extensions"
 
 source_files $TC_MODULES_DIR/ble-ext/
