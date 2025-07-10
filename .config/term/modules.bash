@@ -1,7 +1,7 @@
 # add ble.sh
 # https://github.com/akinomyoga/ble.sh
 TC_BLE_SOURCE_DIR=$TC_MODULES_DIR/ble
-TC_BLE_SCRIPT=$TC_BLE_SOURCE_DIR/out/ble.sh
+TC_BLE_SCRIPT=$TC_MODULES_DIR/ble-install/ble.sh
 if [[ ! -f $TC_BLE_SCRIPT ]]; then
     DebugMessage "ble.sh not found!"
     # Check if the submodule is initialized
@@ -16,7 +16,7 @@ if [[ ! -f $TC_BLE_SCRIPT ]]; then
 
     if command -v make &>/dev/null; then
         DebugMessage "Building ble.sh"
-        make -C $TC_BLE_SOURCE_DIR install
+        make -C $TC_BLE_SOURCE_DIR INSDIR="$TC_MODULES_DIR/ble-install" install
     else
         DebugMessage "No \"make\" in path! Cannot build ble.sh"
         unset TC_BLE_SOURCE_DIR TC_BLE_SCRIPT
@@ -35,9 +35,10 @@ fi
 if should_perform_update ble 86400; then
     DebugMessage "Updating ble.sh"
 
-    # Make sure this is silent
-    bash $TC_BLE_SCRIPT --update >/dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
+    # Make sure this is silent and save its exit code
+    bash "$TC_BLE_SCRIPT" --update >/dev/null 2>&1
+    update_rc=$?
+    if ((update_rc != 0)); then
         Warn "Failed to update ble.sh"
     fi
 fi
