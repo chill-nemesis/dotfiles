@@ -30,30 +30,11 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# If tmux is available, and if not in a tmux env, start tmux
-# This is run before the dotfiles hook to prevent running the startup scripts twice
-if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-    # If we're not attached to a terminal on stdin,
-    # then there's something being piped in (like a banner)
-    BANNER_FILE="$(mktemp)"
-
-    # Check if it is a login shell
-    # If so, we should print that in the banner
-    if shopt -q login_shell; then
-        run-parts /etc/update-motd.d >>"$BANNER_FILE"
-    fi
-
-    if ! [ -t 0 ]; then
-        # Append any additional banner that may be there
-        cat >>"$BANNER_FILE"
-    fi
-
-    # Start tmux with the banner, and remove the banner file afterwards
-    tmux new bash -c "cat \"$BANNER_FILE\"; rm -f \"$BANNER_FILE\"; exec bash"
-
-    # Exit the original shell so we only keep the tmux session
-    # TODO: keep alive flag?
-    exit
+# If we are in an interactive shell and not within tmux, start tmux.
+# Doing that before the dotfiles hook to prevent running the startup scripts twice
+if [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
+    # Start tmux as the default shell
+    exec tmux
 fi
 
 # load the root bashrc. This takes care of loading all other available scripts and configs
