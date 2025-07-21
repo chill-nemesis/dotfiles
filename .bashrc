@@ -10,7 +10,7 @@ esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoredups:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -30,33 +30,22 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# load the root bashrc. This takes care of loading all other available scripts and configs
-if [ -f ~/.dotfiles/.config/term/root.rc ]; then
-    . ~/.dotfiles/.config/term/root.rc
-fi
+# If we are in an interactive shell and not within tmux, start tmux.
+# Doing that before the dotfiles hook to prevent running the startup scripts twice
+if [[ -z "$TMUX" ]] && [[ ! "$TERM" =~ screen ]] && command -v tmux &>/dev/null; then
+    # Start tmux as the default shell
+    exec tmux
+else
+    # ask tmux what the pane index is
+    idx=$(tmux display-message -p -F "#{pane_index}")
 
-# If tmux is available, and if not in a tmux env, start tmux
-# Technically, this means that we are running dotfiles twice (once for the "original" bash, and once for tmux)
-if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-    # If we're not attached to a terminal on stdin,
-    # then there's something being piped in (like a banner)
-    BANNER_FILE="$(mktemp)"
-
-    # Check if it is a login shell
-    # If so, we should print that in the banner
-    if shopt -q login_shell; then
-        run-parts /etc/update-motd.d >>"$BANNER_FILE"
+    # Only print the banner if this is the first pane in the session
+    if [[ "$idx" -eq 0 ]]; then
+        run-parts /etc/update-motd.d --lsbsysinit 2>/dev/null
     fi
 
-    if ! [ -t 0 ]; then
-        # Append any additional banner that may be there
-        cat >>"$BANNER_FILE"
+    # load the root bashrc. This takes care of loading all other available scripts and configs
+    if [ -f ~/.dotfiles/.config/term/root.rc ]; then
+        . ~/.dotfiles/.config/term/root.rc
     fi
-
-    # Start tmux with the banner, and remove the banner file afterwards
-    tmux new bash -c "cat \"$BANNER_FILE\"; rm -f \"$BANNER_FILE\"; exec bash"
-
-    # Exit the original shell so we only keep the tmux session
-    # TODO: keep alive flag?
-    exit
 fi
