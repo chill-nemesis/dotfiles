@@ -32,7 +32,7 @@ shopt -s checkwinsize
 
 # If we are in an interactive shell and not within tmux, start tmux.
 # Doing that before the dotfiles hook to prevent running the startup scripts twice
-if [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
+if [[ -z "$TMUX" ]] && [[ ! "$TERM" =~ screen ]] && command -v tmux &>/dev/null; then
     # Start tmux as the default shell
     exec tmux
 else
@@ -43,9 +43,9 @@ else
     if [[ "$idx" -eq 0 ]]; then
         run-parts /etc/update-motd.d --lsbsysinit 2>/dev/null
     fi
-fi
 
-# load the root bashrc. This takes care of loading all other available scripts and configs
-if [ -f ~/.dotfiles/.config/term/root.rc ]; then
-    . ~/.dotfiles/.config/term/root.rc
+    # load the root bashrc. This takes care of loading all other available scripts and configs
+    if [ -f ~/.dotfiles/.config/term/root.rc ]; then
+        . ~/.dotfiles/.config/term/root.rc
+    fi
 fi
