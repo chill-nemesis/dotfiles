@@ -7,7 +7,7 @@ DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
 . ${DF_ROOT_DIR}/.config/term/helpers.rc.internal
 
 # A list of files and directories that need to be moved for install
-DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig .vim"
+DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig .vim .blerc"
 
 
 if is_windows; then
