@@ -23,6 +23,12 @@ if is_windows; then
 		esac
 	done
 	unset yn
+else
+	# We assume linux here
+	echo "Found a non-windows OS, assuming linux."
+	echo "Installing necessary system packages. This may ask for your sudo password."
+	sudo apt-get update
+	sudo apt-get install -y git curl vim tmux make gawk
 fi
 
 #
