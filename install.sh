@@ -7,7 +7,7 @@ DF_INSTALL_CACHE_DIR=$DF_ROOT_DIR/.cache/install
 . ${DF_ROOT_DIR}/.config/term/helpers.rc.internal
 
 # A list of files and directories that need to be moved for install
-DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig .vim"
+DF_FILES_TO_MOVE=".bashrc .zshrc .vimrc .tmux.conf .gitconfig .vim .blerc"
 
 
 if is_windows; then
@@ -23,6 +23,12 @@ if is_windows; then
 		esac
 	done
 	unset yn
+else
+	# We assume linux here
+	echo "Found a non-windows OS, assuming linux."
+	echo "Installing necessary system packages. This may ask for your sudo password."
+	sudo apt-get update
+	sudo apt-get install -y git curl vim tmux make gawk
 fi
 
 #
